@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'gyazo'
+
+if ARGV.empty?
+  STDERR.puts "gyazo [file1, file2 ...]"
+  exit 1
+end
+
+g = Gyazo.new
+ARGV.each do |file|
+  next unless File.exists? file
+  url = g.upload file
+  puts url
+  system "open #{url}"
+  sleep 1
+end
