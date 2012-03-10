@@ -9,3 +9,4 @@ script/destroy
 script/generate
 test/test_gyazo.rb
 test/test_helper.rb
+bin/gyazo
