@@ -52,14 +52,9 @@ EOF
       http.post(@cgi,data,header)
     }
 
-    # @url = res.response.to_ary[1]
     @url = res.read_body
 
-    # system "echo #{@url} | pbcopy"
-    # system "open #{url}"
-
     # save id
-    # newid = res.response['X-Gyazo-Id']
     newid = res['X-Gyazo-Id']
     if newid and newid != "" then
       if !File.exist?(File.dirname(@idfile)) then
