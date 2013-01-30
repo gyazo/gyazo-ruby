@@ -5,7 +5,7 @@ $:.unshift(File.dirname(__FILE__)) unless
 require 'net/http'
 
 class Gyazo
-  VERSION = '0.0.2'
+  VERSION = '0.0.5'
 
   def initialize(app = '/Applications/Gyazo.app')
     @user = IO.popen("whoami", "r+").gets.chomp
@@ -23,7 +23,7 @@ class Gyazo
   def upload(imagefile)
     tmpfile = "/tmp/image_upload#{$$}.png"
     if imagefile && File.exist?(imagefile) then
-      system "sips -s format png \"#{imagefile}\" --out \"#{tmpfile}\""
+      system "sips -s format png \"#{imagefile}\" --out \"#{tmpfile}\" > /dev/null"
     end
     imagedata = File.read(tmpfile)
     File.delete(tmpfile)
