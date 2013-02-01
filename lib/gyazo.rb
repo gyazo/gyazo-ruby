@@ -5,7 +5,7 @@ $:.unshift(File.dirname(__FILE__)) unless
 require 'net/http'
 
 class Gyazo
-  VERSION = '0.0.5'
+  VERSION = '0.1.0'
 
   def initialize(app = '/Applications/Gyazo.app')
     @user = IO.popen("whoami", "r+").gets.chomp
@@ -20,7 +20,7 @@ class Gyazo
     end
   end
 
-  def upload(imagefile)
+  def upload(imagefile,time=nil)
     tmpfile = "/tmp/image_upload#{$$}.png"
     if imagefile && File.exist?(imagefile) then
       system "sips -s format png \"#{imagefile}\" --out \"#{tmpfile}\" > /dev/null"
@@ -43,6 +43,18 @@ content-disposition: form-data; name="imagedata"; filename="gyazo.com"\r
 #{imagedata}\r
 --#{boundary}--\r
 EOF
+
+    if time && time.class == Time then
+      @timestr = time.gmtime.strftime("%Y-%m-%d %H:%M:%S")
+      s = <<EOF
+--#{boundary}\r
+content-disposition: form-data; name="date"\r
+\r
+#{@timestr}\r
+EOF
+      data = s + data
+    end
+
     header ={
       'Content-Length' => data.length.to_s,
       'Content-type' => "multipart/form-data; boundary=#{boundary}",
