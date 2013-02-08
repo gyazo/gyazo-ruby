@@ -5,7 +5,7 @@ $:.unshift(File.dirname(__FILE__)) unless
 require 'net/http'
 
 class Gyazo
-  VERSION = '0.1.0'
+  VERSION = '0.1.1'
 
   def initialize(app = '/Applications/Gyazo.app')
     @user = IO.popen("whoami", "r+").gets.chomp
