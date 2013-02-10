@@ -2,7 +2,8 @@
 # バージョンを変えた場合はlib/gyazo.rbとMakefileのバージョン番号を変えること
 #
 
-VERSION=0.1.1
+# リスト取得、情報取得を含むAPI
+VERSION=0.2.0
 
 localinstall:
 	rake package

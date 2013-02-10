@@ -3,9 +3,10 @@ $:.unshift(File.dirname(__FILE__)) unless
   $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
 
 require 'net/http'
+require 'json'
 
 class Gyazo
-  VERSION = '0.1.1'
+  VERSION = '0.2.0'
 
   def initialize(app = '/Applications/Gyazo.app')
     @user = IO.popen("whoami", "r+").gets.chomp
@@ -18,6 +19,27 @@ class Gyazo
     elsif File.exist?(@old_idfile) then
       @id = File.read(@old_idfile).chomp
     end
+    @host = 'gyazo.com'
+  end
+
+  def info(gyazoid)
+    gyazoid =~ /[0-9a-f]{32}/
+    gyazoid = $&
+    cgi = "/api/image/get?image_id=#{gyazoid}"
+    header = {}
+    res = Net::HTTP.start(@host,80){|http|
+      http.get(cgi,header)
+    }
+    JSON.parse(res.read_body)
+  end
+
+  def list(page,count)
+    cgi = "/api/image/list?userkey=#{@id}&page=#{page}&count=#{count}"
+    header = {}
+    res = Net::HTTP.start(@host,80){|http|
+      http.get(cgi,header)
+    }
+    JSON.parse(res.read_body)['images']
   end
 
   def upload(imagefile,time=nil)
@@ -29,7 +51,6 @@ class Gyazo
     File.delete(tmpfile)
 
     boundary = '----BOUNDARYBOUNDARY----'
-    @host = 'gyazo.com'
     @cgi = '/upload.cgi'
     @ua   = 'Gyazo/1.0'
     data = <<EOF
