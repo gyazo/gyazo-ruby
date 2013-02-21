@@ -22,6 +22,8 @@ class Gyazo
     @host = 'gyazo.com'
   end
 
+  attr_accessor :id
+
   def info(gyazoid)
     gyazoid =~ /[0-9a-f]{32}/
     gyazoid = $&
