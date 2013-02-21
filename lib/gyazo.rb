@@ -6,7 +6,7 @@ require 'net/http'
 require 'json'
 
 class Gyazo
-  VERSION = '0.2.0'
+  VERSION = '0.2.1'
 
   def initialize(app = '/Applications/Gyazo.app')
     @user = IO.popen("whoami", "r+").gets.chomp
