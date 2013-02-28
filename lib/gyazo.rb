@@ -6,10 +6,11 @@ require 'net/http'
 require 'json'
 
 class Gyazo
-  VERSION = '0.2.1'
+  VERSION = '0.3.1'
 
-  def initialize(app = '/Applications/Gyazo.app')
+  def initialize(app = '/Applications/Gyazo.app',userid=nil)
     @user = IO.popen("whoami", "r+").gets.chomp
+    @userid = userid
     @program = app
     @idfile = "/Users/#{@user}/Library/Gyazo/id"
     @old_idfile = File.dirname(@program) + "/gyazo.app/Contents/Resources/id"
@@ -23,6 +24,7 @@ class Gyazo
   end
 
   attr_accessor :id
+  attr_accessor :userid
 
   def info(gyazoid)
     gyazoid =~ /[0-9a-f]{32}/
@@ -36,7 +38,12 @@ class Gyazo
   end
 
   def list(page,count)
-    cgi = "/api/image/list?userkey=#{@id}&page=#{page}&count=#{count}"
+    # 旧API
+    # cgi = "/api/image/list?userkey=#{@id}&page=#{page}&count=#{count}"
+    # 新API: @useridが指定されている場合はマシン共通のUserIDを利用する
+    cgi = (@userid ?
+           "/api/image/list?user_id=#{@userid}&page=#{page}&count=#{count}" :
+           "/api/image/list?device_id=#{@id}&page=#{page}&count=#{count}")
     header = {}
     res = Net::HTTP.start(@host,80){|http|
       http.get(cgi,header)
