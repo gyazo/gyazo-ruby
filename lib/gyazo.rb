@@ -51,13 +51,22 @@ class Gyazo
     JSON.parse(res.read_body)['images']
   end
 
-  def upload(imagefile,time=nil)
-    tmpfile = "/tmp/image_upload#{$$}.png"
-    if imagefile && File.exist?(imagefile) then
-      system "sips -s format png \"#{imagefile}\" --out \"#{tmpfile}\" > /dev/null"
+  DEFAULT_UPLOAD_OPTS = {:time => nil, :raw => false}
+  def upload(imagefile, opts)
+    DEFAULT_UPLOAD_OPTS.each do |k,v|
+      opts[k] = v unless opts.include? k
     end
-    imagedata = File.read(tmpfile)
-    File.delete(tmpfile)
+
+    if opts[:raw] then
+      imagedata = File.read(imagefile)
+    else
+      tmpfile = "/tmp/image_upload#{$$}.png"
+      if imagefile && File.exist?(imagefile) then
+        system "sips -s format png \"#{imagefile}\" --out \"#{tmpfile}\" > /dev/null"
+      end
+      imagedata = File.read(tmpfile)
+      File.delete(tmpfile)
+    end
 
     boundary = '----BOUNDARYBOUNDARY----'
     @cgi = '/upload.cgi'
@@ -74,8 +83,8 @@ content-disposition: form-data; name="imagedata"; filename="gyazo.com"\r
 --#{boundary}--\r
 EOF
 
-    if time && time.class == Time then
-      @timestr = time.gmtime.strftime("%Y-%m-%d %H:%M:%S")
+    if opts[:time].kind_of? Time then
+      @timestr = opts[:time].gmtime.strftime("%Y-%m-%d %H:%M:%S")
       s = <<EOF
 --#{boundary}\r
 content-disposition: form-data; name="date"\r

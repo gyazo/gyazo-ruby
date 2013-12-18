@@ -1,16 +1,24 @@
 #!/usr/bin/env ruby
+$:.unshift File.expand_path '../lib', File.dirname(__FILE__)
+
 require 'rubygems'
 require 'gyazo'
 
-if ARGV.empty?
+raw = ARGV.include? "-raw"
+upload_files = ARGV.reject{|arg| arg =~ /^\-+raw$/ }
+
+if upload_files.empty?
   STDERR.puts "gyazo [file1, file2 ...]"
+  STDERR.puts "gyazo -raw [file1, file2 ...]  # raw upload"
   exit 1
 end
 
 g = Gyazo.new
-ARGV.each do |file|
+
+
+upload_files.each do |file|
   next unless File.exists? file
-  url = g.upload file
+  url = g.upload file, :raw => raw
   puts url
   system "open #{url}"
   sleep 1
