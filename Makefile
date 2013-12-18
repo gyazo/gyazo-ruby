@@ -3,7 +3,7 @@
 #
 
 # リスト取得、情報取得を含むAPI
-VERSION=0.3.1
+VERSION=0.4.2
 
 localinstall:
 	rake package
