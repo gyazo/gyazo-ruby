@@ -3,6 +3,7 @@ $:.unshift File.expand_path '../lib', File.dirname(__FILE__)
 
 require 'rubygems'
 require 'gyazo'
+require 'launchy'
 
 raw = ARGV.include? "-raw"
 upload_files = ARGV.reject{|arg| arg =~ /^\-+raw$/ }
@@ -20,6 +21,6 @@ upload_files.each do |file|
   next unless File.exists? file
   url = g.upload file, :raw => raw
   puts url
-  system "open #{url}"
+  Launchy.open url
   sleep 1
 end
