@@ -14,7 +14,7 @@ if upload_files.empty?
   exit 1
 end
 
-g = Gyazo.new
+g = Gyazo::Client.new
 
 
 upload_files.each do |file|
