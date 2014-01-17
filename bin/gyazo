@@ -21,6 +21,6 @@ upload_files.each do |file|
   next unless File.exists? file
   url = g.upload file, :raw => raw
   puts url
-  Launchy.open url
+  Launchy.open url rescue
   sleep 1
 end

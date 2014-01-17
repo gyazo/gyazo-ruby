@@ -56,7 +56,7 @@ module Gyazo
 
       unless opts[:raw]
         tmpfile = "/tmp/gyazo_upload_#{Time.now.to_i}_#{Time.now.usec}.png"
-        if File.exist? imagefile
+        if File.exist? imagefile and RUBY_PLATFORM =~ /darwin/
           system "sips -s format png \"#{imagefile}\" --out \"#{tmpfile}\" > /dev/null"
         end
       end
