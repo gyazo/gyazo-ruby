@@ -5,12 +5,12 @@ class TestGyazo < MiniTest::Test
   def setup
     @gyazo = Gyazo::Client.new
     @imagefile = File.expand_path 'test.png', File.dirname(__FILE__)
-    @image_id = "a2a2a8154340bd33e9cd5eeea1efd832"
+    @image_id = Digest::MD5.hexdigest File.open(@imagefile).read
   end
 
   def test_upload
     url = @gyazo.upload @imagefile
-    assert_equal url, "#{@gyazo.host}/#{@image_id}"
+    assert url.match /^#{@gyazo.host}\/[a-z\d]{32}$/
   end
 
   def test_id
