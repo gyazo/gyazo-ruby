@@ -59,12 +59,13 @@ module Gyazo
         if File.exist? imagefile and RUBY_PLATFORM =~ /darwin/
           system "sips -s format png \"#{imagefile}\" --out \"#{tmpfile}\" > /dev/null"
         end
+        imagefile = tmpfile
       end
 
       res = HTTMultiParty.post "#{@host}/upload.cgi", {
         :query => {
           :id => @id,
-          :imagedata => File.new(imagefile)
+          :imagedata => File.open(imagefile)
         },
         :header => {
           'User-Agent' => @user_agent
