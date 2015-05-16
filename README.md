@@ -1,6 +1,6 @@
 Gyazo
 =====
-Upload an image to http://gyazo.com
+[Gyazo API](https://gyazo.com/api/docs) wrapper for Ruby
 
 - http://github.com/masui/gyazo-ruby
 - https://rubygems.org/gems/gyazo
@@ -15,36 +15,44 @@ Installation
 Usage
 -----
 
+Register new application and get [ACCESS TOKEN](https://gyazo.com/oauth/applications), then
+
 ### Upload
 
 ```ruby
 require 'gyazo'
 
-g = Gyazo::Client.new
-g.upload 'my_image.png'  #=> "http://gyazo.com/a1b2cdef345"
+gyazo = Gyazo::Client.new 'your-access-token'
+res = gyazo.upload 'my_image.png'
+puts res['permalink_url']  # => "http://gyazo.com/a1b2cdef345"
 ```
 
 ### List
 
 ```ruby
-g.list.each do |image|
-   image['image_id']
+gyazo.list.each do |image|
+  image['image_id']
 end
 ```
 
+### Delete
 
-### Upload to http://your-private-gyazo.com
 ```ruby
-g = Gyazo::Client.new
-g.host = 'http://your-private-gyazo.com'
-g.upload 'my_image.png'
+gyazo.delete image_id
 ```
+
 
 Test
 ----
 
+setup
+
     % gem install bundler
     % bundle install
+    % export GYAZO_TOKEN=a1b2cdef3456   ## set your API Token
+
+run test
+
     % bundle exec rake test
 
 

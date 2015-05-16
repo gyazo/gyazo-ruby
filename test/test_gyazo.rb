@@ -3,30 +3,23 @@ require File.expand_path 'test_helper', File.dirname(__FILE__)
 class TestGyazo < MiniTest::Test
 
   def setup
-    @gyazo = Gyazo::Client.new
+    @gyazo = Gyazo::Client.new ENV['GYAZO_TOKEN']
     @imagefile = File.expand_path 'test.png', File.dirname(__FILE__)
-    @image_id = Digest::MD5.hexdigest File.open(@imagefile).read
   end
 
   def test_upload
-    url = @gyazo.upload @imagefile
-    assert url.match /^#{@gyazo.host}\/[a-z\d]{32}$/
-  end
-
-  def test_id
-    @gyazo = Gyazo::Client.new
-    assert @gyazo.id =~ /^[0-9a-f]+$/
-    @gyazo.id = '12345'
-    assert_equal @gyazo.id, '12345'
+    res = @gyazo.upload @imagefile
+    assert res['permalink_url'].match /^http:\/\/gyazo.com\/[a-z\d]{32}$/
   end
 
   def test_list
     assert_equal @gyazo.list.class, Array
   end
 
-  def test_info
-    info = @gyazo.info @image_id
-    assert_equal info.class, Hash
+  def test_delete
+    res_up = @gyazo.upload @imagefile
+    res_del = @gyazo.delete res_up['image_id']
+    assert_equal res_del['image_id'], res_up['image_id']
   end
 
 end
