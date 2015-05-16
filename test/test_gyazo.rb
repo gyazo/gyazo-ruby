@@ -9,7 +9,7 @@ class TestGyazo < MiniTest::Test
 
   def test_upload
     res = @gyazo.upload @imagefile
-    assert res['permalink_url'].match /^http:\/\/gyazo.com\/[a-z\d]{32}$/
+    assert res['permalink_url'].match /^https?:\/\/gyazo.com\/[a-z\d]{32}$/i
   end
 
   def test_list
