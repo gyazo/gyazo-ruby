@@ -2,6 +2,8 @@ Gyazo
 =====
 [Gyazo API](https://gyazo.com/api/docs) wrapper for Ruby
 
+[![Build Status](https://travis-ci.org/masui/gyazo-ruby.svg?branch=master)](https://travis-ci.org/masui/gyazo-ruby)
+
 - http://github.com/masui/gyazo-ruby
 - https://rubygems.org/gems/gyazo
 
