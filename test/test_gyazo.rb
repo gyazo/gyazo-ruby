@@ -7,8 +7,13 @@ class TestGyazo < MiniTest::Test
     @imagefile = File.expand_path 'test.png', File.dirname(__FILE__)
   end
 
-  def test_upload
+  def test_upload_filepath
     res = @gyazo.upload @imagefile
+    assert res['permalink_url'].match /^https?:\/\/gyazo.com\/[a-z\d]{32}$/i
+  end
+
+  def test_upload_file
+    res = @gyazo.upload File.open(@imagefile)
     assert res['permalink_url'].match /^https?:\/\/gyazo.com\/[a-z\d]{32}$/i
   end
 
