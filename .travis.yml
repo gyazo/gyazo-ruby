@@ -1,0 +1,5 @@
+language: ruby
+rvm:
+- 2.1.2
+env:
+  secure: SKTPKUXfgOehDNdgdMxKykef1m7XswYKA72qANyqHQ3/P/9c7RcRfTSVD86wj4riT8BX5YTbNhKKQFa79HozioezF7tT5A6xF5qiJOt1sjjtMfhc0d3zqN3RVJNRpx+1+hgNpv9OQ6RrTdw3At1TjzvgdMAiJI4X8lqZ904Gu60=
