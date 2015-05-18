@@ -33,7 +33,7 @@ puts res['permalink_url']  # => "http://gyazo.com/a1b2cdef345"
 
 ```ruby
 gyazo.list.each do |image|
-  image['image_id']
+  puts image['url']
 end
 ```
 
