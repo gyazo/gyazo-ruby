@@ -9,12 +9,14 @@ module Gyazo
       @user_agent = "GyazoRubyGem/#{Gyazo::VERSION}"
     end
 
-    def upload(imagefile)
+    def upload(imagefile,time=null)
       url = "https://upload.gyazo.com/api/upload"
+      time = Time.now unless time
       res = HTTMultiParty.post url, {
         :query => {
           :access_token => @access_token,
           :imagedata => File.open(imagefile)
+          :created_at => time.to_i
         },
         :header => {
           'User-Agent' => @user_agent
