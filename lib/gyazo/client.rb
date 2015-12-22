@@ -10,7 +10,6 @@ module Gyazo
       @user_agent = "GyazoRubyGem/#{Gyazo::VERSION}"
     end
     
-    # def upload_old(imagefile,time=nil)
     def upload(imagefile,params={})
       url = "https://upload.gyazo.com/api/upload"
       time = params['time'] || params['created_at'] || Time.now
