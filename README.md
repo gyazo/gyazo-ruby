@@ -22,17 +22,22 @@ Register new application and get [ACCESS TOKEN](https://gyazo.com/oauth/applicat
 
 ```ruby
 require 'gyazo'
-
 gyazo = Gyazo::Client.new 'your-access-token'
+
 res = gyazo.upload 'my_image.png'
 puts res['permalink_url']  # => "http://gyazo.com/a1b2cdef345"
 ```
 #### Upload with metadata
 
-```ruby
-require 'gyazo'
+Following attributes can be set
 
-gyazo = Gyazo::Client.new 'your-access-token'
+* time
+* url
+* title
+* desc
+
+
+```ruby
 res = gyazo.upload 'my_image.png',
   { :time => Time.now, :url => 'http://example.com/' }
 puts res['permalink_url']
