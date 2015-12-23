@@ -8,14 +8,13 @@ Gyazo
 - https://rubygems.org/gems/gyazo
 
 
-Installation
-------------
+# Install
+
 
     % gem install gyazo
 
 
-Usage
------
+# Usage
 
 Register new application and get [ACCESS TOKEN](https://gyazo.com/oauth/applications), then
 
@@ -27,6 +26,16 @@ require 'gyazo'
 gyazo = Gyazo::Client.new 'your-access-token'
 res = gyazo.upload 'my_image.png'
 puts res['permalink_url']  # => "http://gyazo.com/a1b2cdef345"
+```
+#### Upload with metadata
+
+```ruby
+require 'gyazo'
+
+gyazo = Gyazo::Client.new 'your-access-token'
+res = gyazo.upload 'my_image.png',
+  { 'time' => Time.now, 'url' => 'http://example.com/' }
+puts res['permalink_url']
 ```
 
 ### List

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gyazo (2.0.1)
+    gyazo (2.1.1)
       httmultiparty
       httparty
       json
