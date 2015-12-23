@@ -34,7 +34,7 @@ require 'gyazo'
 
 gyazo = Gyazo::Client.new 'your-access-token'
 res = gyazo.upload 'my_image.png',
-  { 'time' => Time.now, 'url' => 'http://example.com/' }
+  { :time => Time.now, :url => 'http://example.com/' }
 puts res['permalink_url']
 ```
 
