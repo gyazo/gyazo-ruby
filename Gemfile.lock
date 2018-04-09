@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    gyazo (2.1.1)
+    gyazo (2.1.2)
       httmultiparty
-      httparty
+      httparty (~> 0.15.0)
       json
 
 GEM
@@ -13,13 +13,12 @@ GEM
       httparty (>= 0.7.3)
       mimemagic
       multipart-post
-    httparty (0.13.7)
-      json (~> 1.8)
+    httparty (0.15.7)
       multi_xml (>= 0.5.2)
-    json (1.8.3)
-    mimemagic (0.3.0)
+    json (2.1.0)
+    mimemagic (0.3.2)
     minitest (5.6.1)
-    multi_xml (0.5.5)
+    multi_xml (0.6.0)
     multipart-post (2.0.0)
     rake (10.4.2)
 
@@ -33,4 +32,4 @@ DEPENDENCIES
   rake
 
 BUNDLED WITH
-   1.10.6
+   1.16.1
