@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["masui@pitecan.com"]
   spec.description   = %q{Gyazo.com API Wrapper}
   spec.summary       = spec.description
-  spec.homepage      = "http://github.com/masui/gyazo-ruby"
+  spec.homepage      = "http://github.com/gyazo/gyazo-ruby"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/).reject{|i| i=="Gemfile.lock" }
