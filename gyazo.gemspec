@@ -6,7 +6,7 @@ require 'gyazo/version'
 Gem::Specification.new do |spec|
   spec.name          = "gyazo"
   spec.version       = Gyazo::VERSION
-  spec.authors       = ["Toshiyuki Masui", "Sho Hashimoto"]
+  spec.authors       = ["Toshiyuki Masui", "Sho Hashimoto", "Nana Kugayama"]
   spec.email         = ["masui@pitecan.com"]
   spec.description   = %q{Gyazo.com API Wrapper}
   spec.summary       = spec.description
@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest"
 
   spec.add_dependency "json"
-  spec.add_dependency "httparty"
-  spec.add_dependency "httmultiparty"
+  spec.add_dependency "faraday"
+  spec.add_dependency "multipart-post"
+  spec.add_dependency "mime-types"
 end
