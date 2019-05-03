@@ -23,6 +23,13 @@ res = gyazo.upload imagefile: 'my_image.png'
 puts res #=> {:type=>"png", :thumb_url=>"https://thumb.gyazo.com/thumb/...", :created_at=>"2019-05-03T11:57:35+0000", :image_id=>"...", :permalink_url=>"https://gyazo.com/...", :url=>"https://i.gyazo.com/....png"}
 ```
 
+### passing filename
+if you give io for `imagefile:`, you need `filename:`.
+
+```ruby
+gyazo.upload imagefile: File.open(image), filename: 'image.png'
+```
+
 ### Upload with metadata
 Following attributes can be set
 
