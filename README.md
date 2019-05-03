@@ -46,8 +46,8 @@ res = gyazo.upload imagefile: 'my_image.png', created_at: Time.now, referer_url:
 ## List
 
 ```ruby
-gyazo.list.each do |image|
-  puts image['url']
+gyazo.list[:images].each do |image|
+  puts image[:url]
 end
 ```
 
