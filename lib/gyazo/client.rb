@@ -1,57 +1,97 @@
 # coding: utf-8
+require 'json'
+require 'faraday'
+require 'mime/types'
+
 module Gyazo
-
   class Client
+    UploadURI = 'https://upload.gyazo.com/api/upload'
+    APIHost = 'https://api.gyazo.com'
+    attr_accessor :access_token, :user_agent
 
-    attr_accessor :id, :user_id, :user_agent, :host
-
-    def initialize(access_token = nil)
+    def initialize(access_token:, user_agent: nil)
       @access_token = access_token
-      @user_agent = "GyazoRubyGem/#{Gyazo::VERSION}"
-    end
-    
-    def upload(imagefile,params={})
-      url = "https://upload.gyazo.com/api/upload"
-      time = params[:time] || params[:created_at] || Time.now
-      res = HTTMultiParty.post url, {
-        :query => {
-          :access_token => @access_token,
-          :imagedata => File.open(imagefile),
-          :created_at => time.to_i,
-          :referer_url => params[:referer_url] || params[:url] || '',
-          :title =>  params[:title] || '',
-          :desc =>  params[:desc] || ''
-        },
-        :header => {
-          'User-Agent' => @user_agent
-        }
-      }
-      raise Gyazo::Error, res.body unless res.code == 200
-      return JSON.parse res.body
+      @user_agent = user_agent || "GyazoRubyGem/#{Gyazo::VERSION}"
+      @conn = ::Faraday.new(url: APIHost) do |f|
+        f.request :url_encoded
+        f.adapter ::Faraday.default_adapter
+      end
     end
 
-    def list(query = {})
-      url = "https://api.gyazo.com/api/images"
-      query[:access_token] = @access_token
-      res = HTTParty.get url, {
-        :query => query,
-        :header => {
-          'User-Agent' => @user_agent
+    def upload(imagefile:, filename: nil, created_at: ::Time.now, referer_url: '', title: '', desc: '')
+      ensure_io_or_file_exists imagefile, filename
+
+      conn = ::Faraday.new do |f|
+        f.request :multipart
+        f.request :url_encoded
+        f.adapter ::Faraday.default_adapter
+      end
+      type = ::MIME::Types.type_for(filename || imagefile)[0].to_s
+      res = conn.post UploadURI do |req|
+        req.body = {
+          access_token: @access_token,
+          imagedata: ::Faraday::UploadIO.new(imagefile, type, filename),
+          created_at: created_at.to_i,
+          referer_url: referer_url.to_s,
+          title: title.to_s,
+          desc: desc.to_s,
         }
-      }
-      raise Gyazo::Error, res.body unless res.code == 200
-      return JSON.parse res.body
+        req.headers['User-Agent'] = @user_agent
+      end
+      raise Gyazo::Error, res.body unless res.status == 200
+      return ::JSON.parse res.body, symbolize_names: true
     end
 
-    def delete(image_id)
-      url = "https://api.gyazo.com/api/images/#{image_id}"
-      res = HTTParty.delete url, {
-        :query => {
-          :access_token => @access_token
-        }
+    def list(page: 1, per_page: 20)
+      path = '/api/images'
+      res = @conn.get path do |req|
+        req.params[:access_token] = @access_token
+        req.params[:page] = page
+        req.params[:per_page] = per_page
+        req.headers['User-Agent'] = @user_agent
+      end
+      raise Gyazo::Error, res.body unless res.status == 200
+      json = ::JSON.parse res.body, symbolize_names: true
+      {
+        total_count: res.headers['X-Total-Count'],
+        current_page: res.headers['X-Current-Page'],
+        per_page: res.headers['X-Per-Page'],
+        user_type: res.headers['X-User-Type'],
+        images: json
       }
-      raise Gyazo::Error, res.body unless res.code == 200
-      return JSON.parse res.body
+    end
+
+    def image(image_id:)
+      path = "/api/images/#{image_id}"
+      res = @conn.get path do |req|
+        req.params[:access_token] = @access_token
+        req.headers['User-Agent'] = @user_agent
+      end
+      raise Gyazo::Error, res.body unless res.status == 200
+      return ::JSON.parse res.body, symbolize_names: true
+    end
+
+    def delete(image_id:)
+      path = "/api/images/#{image_id}"
+      res = @conn.delete path do |req|
+        req.params[:access_token] = @access_token
+        req.headers['User-Agent'] = @user_agent
+      end
+      raise Gyazo::Error, res.body unless res.status == 200
+      return ::JSON.parse res.body, symbolize_names: true
+    end
+
+    private
+
+    def ensure_io_or_file_exists(file, name)
+      if file.respond_to?(:read) && file.respond_to?(:rewind)
+        if name.nil?
+          raise ArgumentError, "need filename: when file is io"
+        end
+        return
+      end
+      return if ::File.file? file
+      raise ArgumentError, "cannot find file #{file}"
     end
   end
 end

@@ -2,64 +2,69 @@ Gyazo
 =====
 [Gyazo API](https://gyazo.com/api/docs) wrapper for Ruby
 
-[![Build Status](https://travis-ci.org/masui/gyazo-ruby.svg?branch=master)](https://travis-ci.org/masui/gyazo-ruby)
-
-- http://github.com/masui/gyazo-ruby
+- http://github.com/gyazo/gyazo-ruby
 - https://rubygems.org/gems/gyazo
 
 
 # Install
 
-
     % gem install gyazo
-
 
 # Usage
 
 Register new application and get [ACCESS TOKEN](https://gyazo.com/oauth/applications), then
 
-### Upload
+## Upload
 
 ```ruby
 require 'gyazo'
-gyazo = Gyazo::Client.new 'your-access-token'
-
-res = gyazo.upload 'my_image.png'
-puts res['permalink_url']  # => "http://gyazo.com/a1b2cdef345"
+gyazo = Gyazo::Client.new access_token: 'your-access-token'
+res = gyazo.upload imagefile: 'my_image.png'
+puts res #=> {:type=>"png", :thumb_url=>"https://thumb.gyazo.com/thumb/...", :created_at=>"2019-05-03T11:57:35+0000", :image_id=>"...", :permalink_url=>"https://gyazo.com/...", :url=>"https://i.gyazo.com/....png"}
 ```
-#### Upload with metadata
 
+### passing filename
+if you give io for `imagefile:`, you need `filename:`.
+
+```ruby
+gyazo.upload imagefile: File.open(image), filename: 'image.png'
+```
+
+### Upload with metadata
 Following attributes can be set
 
-* time
-* url
-* title
-* desc
+* created_at(default: `Time.now`)
+* referer_url(default: '')
+* title(default: '')
+* desc(default: '')
 
 
 ```ruby
-res = gyazo.upload 'my_image.png',
-  { :time => Time.now, :url => 'http://example.com/' }
-puts res['permalink_url']
+res = gyazo.upload imagefile: 'my_image.png', created_at: Time.now, referer_url: 'https://example.com/'
 ```
 
-### List
+## List
 
 ```ruby
-gyazo.list.each do |image|
-  puts image['url']
+gyazo.list[:images].each do |image|
+  puts image[:url]
 end
 ```
 
-### Delete
+## image detail
 
 ```ruby
-gyazo.delete image_id
+gyazo.image image_id: image_id
+```
+
+## Delete
+
+```ruby
+gyazo.delete image_id: image_id
 ```
 
 
-Test
-----
+# Test
 
 setup
 
