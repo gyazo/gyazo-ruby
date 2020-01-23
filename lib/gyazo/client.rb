@@ -18,7 +18,7 @@ module Gyazo
       end
     end
 
-    def upload(imagefile:, filename: nil, created_at: ::Time.now, referer_url: '', title: '', desc: '')
+    def upload(imagefile:, filename: nil, created_at: ::Time.now, referer_url: '', title: '', desc: '', collection_id: '')
       ensure_io_or_file_exists imagefile, filename
 
       conn = ::Faraday.new do |f|
@@ -35,6 +35,7 @@ module Gyazo
           referer_url: referer_url.to_s,
           title: title.to_s,
           desc: desc.to_s,
+          collection_id: collection_id.to_s,
         }
         req.headers['User-Agent'] = @user_agent
       end

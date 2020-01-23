@@ -18,6 +18,11 @@ class TestGyazo < MiniTest::Test
     assert res[:permalink_url].match GYAZO_REGEXP
   end
 
+  def test_upload_with_collection_id
+    res = @gyazo.upload imagefile: @imagefile, collection_id: ENV['GYAZO_COLLECTION_ID']
+    assert res[:permalink_url].match GYAZO_REGEXP
+  end
+
   def test_list
     list = @gyazo.list
     assert_instance_of Hash, list
