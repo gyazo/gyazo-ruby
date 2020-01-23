@@ -37,7 +37,7 @@ Following attributes can be set
 * referer_url(default: '')
 * title(default: '')
 * desc(default: '')
-
+* collection_id(default: '')
 
 ```ruby
 res = gyazo.upload imagefile: 'my_image.png', created_at: Time.now, referer_url: 'https://example.com/'
