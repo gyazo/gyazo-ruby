@@ -16,7 +16,7 @@ GEM
     mime-types-data (3.2019.0331)
     minitest (5.6.1)
     multipart-post (2.0.0)
-    rake (10.4.2)
+    rake (13.0.1)
 
 PLATFORMS
   ruby
