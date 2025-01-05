@@ -64,12 +64,7 @@ module Gyazo
 
     def image(image_id:)
       path = "/api/images/#{image_id}"
-      res = @conn.get path do |req|
-        req.params[:access_token] = @access_token
-        req.headers['User-Agent'] = @user_agent
-      end
-      raise Gyazo::Error, res.body unless res.status == 200
-      return ::JSON.parse res.body, symbolize_names: true
+      send_get_without_param(path:)
     end
 
     def delete(image_id:)
@@ -80,6 +75,11 @@ module Gyazo
       end
       raise Gyazo::Error, res.body unless res.status == 200
       return ::JSON.parse res.body, symbolize_names: true
+    end
+
+    def user_info
+      path = '/api/users/me'
+      send_get_without_param(path:)
     end
 
     private
@@ -93,6 +93,15 @@ module Gyazo
       end
       return if ::File.file? file
       raise ArgumentError, "cannot find file #{file}"
+    end
+
+    def send_get_without_param(path:)
+      res = @conn.get path do |req|
+        req.params[:access_token] = @access_token
+        req.headers['User-Agent'] = @user_agent
+      end
+      raise Gyazo::Error, res.body unless res.status == 200
+      return ::JSON.parse res.body, symbolize_names: true
     end
   end
 end
