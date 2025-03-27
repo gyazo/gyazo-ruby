@@ -44,15 +44,7 @@ module Gyazo
     end
 
     def list(page: 1, per_page: 20)
-      path = '/api/images'
-      res = @conn.get path do |req|
-        req.params[:access_token] = @access_token
-        req.params[:page] = page
-        req.params[:per_page] = per_page
-        req.headers['User-Agent'] = @user_agent
-      end
-      raise Gyazo::Error, res.body unless res.status == 200
-      json = ::JSON.parse res.body, symbolize_names: true
+      json = send_get(path: '/api/images', params: { page:, per_page: })
       {
         total_count: res.headers['X-Total-Count'],
         current_page: res.headers['X-Current-Page'],
@@ -63,8 +55,7 @@ module Gyazo
     end
 
     def image(image_id:)
-      path = "/api/images/#{image_id}"
-      send_get_without_param(path:)
+      send_get(path: "/api/images/#{image_id}")
     end
 
     def delete(image_id:)
@@ -78,21 +69,11 @@ module Gyazo
     end
 
     def user_info
-      path = '/api/users/me'
-      send_get_without_param(path:)
+      send_get(path: '/api/users/me')
     end
 
     def search(query:, page: 1, per_page: 20)
-      path = '/api/search'
-      res = @conn.get path do |req|
-        req.params[:access_token] = @access_token
-        req.params[:query] = query
-        req.params[:page] = page
-        req.params[:per_page] = per_page
-        req.headers['User-Agent'] = @user_agent
-      end
-      raise Gyazo::Error, res.body unless res.status == 200
-      return ::JSON.parse res.body, symbolize_names: true
+      send_get(path: '/api/search', params: { query:, page:, per_page: })
     end
 
     private
@@ -108,9 +89,12 @@ module Gyazo
       raise ArgumentError, "cannot find file #{file}"
     end
 
-    def send_get_without_param(path:)
+    def send_get(path:, params: {})
       res = @conn.get path do |req|
         req.params[:access_token] = @access_token
+        params.each do |k, v|
+          req.params[k] = v
+        end
         req.headers['User-Agent'] = @user_agent
       end
       raise Gyazo::Error, res.body unless res.status == 200
