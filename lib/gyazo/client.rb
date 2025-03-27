@@ -82,6 +82,19 @@ module Gyazo
       send_get_without_param(path:)
     end
 
+    def search(query:, page: 1, per_page: 20)
+      path = '/api/search'
+      res = @conn.get path do |req|
+        req.params[:access_token] = @access_token
+        req.params[:query] = query
+        req.params[:page] = page
+        req.params[:per_page] = per_page
+        req.headers['User-Agent'] = @user_agent
+      end
+      raise Gyazo::Error, res.body unless res.status == 200
+      return ::JSON.parse res.body, symbolize_names: true
+    end
+
     private
 
     def ensure_io_or_file_exists(file, name)
