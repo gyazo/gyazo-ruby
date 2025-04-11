@@ -60,13 +60,7 @@ module Gyazo
     end
 
     def delete(image_id:)
-      path = "/api/images/#{image_id}"
-      res = @conn.delete path do |req|
-        req.params[:access_token] = @access_token
-        req.headers['User-Agent'] = @user_agent
-      end
-
-      parse_body(res)[:json]
+      send_delete(path: "/api/images/#{image_id}")[:json]
     end
 
     def user_info
@@ -90,8 +84,9 @@ module Gyazo
       raise ArgumentError, "cannot find file #{file}"
     end
 
-    def send_get(path:, params: {})
-      res = @conn.get path do |req|
+    def send_req(method:, path:, params: {})
+      res = @conn.send(method) do |req|
+        req.url path
         req.params[:access_token] = @access_token
         params.each do |k, v|
           req.params[k] = v
@@ -100,6 +95,14 @@ module Gyazo
       end
 
       parse_body(res)
+    end
+
+    def send_get(path:, params: {})
+      send_req(method: :get, path:, params:)
+    end
+
+    def send_delete(path:, params: {})
+      send_req(method: :delete, path:, params:)
     end
 
     def parse_body(res)
