@@ -39,23 +39,24 @@ module Gyazo
         }
         req.headers['User-Agent'] = @user_agent
       end
-      raise Gyazo::Error, res.body unless res.status == 200
-      return ::JSON.parse res.body, symbolize_names: true
+
+      parse_body(res)[:json]
     end
 
     def list(page: 1, per_page: 20)
-      json = send_get(path: '/api/images', params: { page:, per_page: })
+      r = send_get(path: '/api/images', params: { page:, per_page: })
+      res = r[:response]
       {
         total_count: res.headers['X-Total-Count'],
         current_page: res.headers['X-Current-Page'],
         per_page: res.headers['X-Per-Page'],
         user_type: res.headers['X-User-Type'],
-        images: json
+        images: r[:json],
       }
     end
 
     def image(image_id:)
-      send_get(path: "/api/images/#{image_id}")
+      send_get(path: "/api/images/#{image_id}")[:json]
     end
 
     def delete(image_id:)
@@ -64,16 +65,16 @@ module Gyazo
         req.params[:access_token] = @access_token
         req.headers['User-Agent'] = @user_agent
       end
-      raise Gyazo::Error, res.body unless res.status == 200
-      return ::JSON.parse res.body, symbolize_names: true
+
+      parse_body(res)[:json]
     end
 
     def user_info
-      send_get(path: '/api/users/me')
+      send_get(path: '/api/users/me')[:json]
     end
 
     def search(query:, page: 1, per_page: 20)
-      send_get(path: '/api/search', params: { query:, page:, per_page: })
+      send_get(path: '/api/search', params: { query:, page:, per_page: })[:json]
     end
 
     private
@@ -97,8 +98,18 @@ module Gyazo
         end
         req.headers['User-Agent'] = @user_agent
       end
+
+      parse_body(res)
+    end
+
+    def parse_body(res)
       raise Gyazo::Error, res.body unless res.status == 200
-      return ::JSON.parse res.body, symbolize_names: true
+      begin
+        json = ::JSON.parse res.body, symbolize_names: true
+      rescue ::JSON::ParserError => e
+        raise Gyazo::Error, "Gyazo API response is not JSON: #{e.message}, body: #{res.body}"
+      end
+      { json:, response: res }
     end
   end
 end
