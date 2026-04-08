@@ -20,15 +20,28 @@ module Gyazo
           Usage: gyazo [options] <command> [args]
 
           Commands:
-            auth login              Save access token to config file
-            auth logout             Remove access token from config file
-            upload <file>           Upload an image
-            list                    List images
-            image <id>              Show image details
-            delete <id>             Delete an image
-            search <query>          Search images
-            user                    Show user info
-            version                 Show version
+            auth login                    Save access token to config file
+            auth logout                   Remove access token from config file
+
+            upload <file>                 Upload an image
+              --title TITLE               Image title
+              --description DESC          Image description
+              --collection-id ID          Collection ID
+              --created-at DATETIME       Created at (ISO 8601)
+
+            list                          List images
+              --page N                    Page number (default: 1)
+              --per-page N                Per page (default: 20)
+
+            image <id>                    Show image details
+            delete <id>                   Delete an image
+
+            search <query>                Search images
+              --page N                    Page number (default: 1)
+              --per-page N                Per page (default: 20)
+
+            user                          Show user info
+            version                       Show version
 
           Options:
         BANNER
