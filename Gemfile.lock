@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gyazo (3.2.0)
+    gyazo (3.3.0)
       faraday (< 2.0.0)
       mime-types
       multipart-post
