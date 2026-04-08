@@ -33,6 +33,7 @@ GEM
     mime-types-data (3.2021.1115)
     minitest (5.6.1)
     multipart-post (2.1.1)
+    mutex_m (0.3.0)
     rake (13.0.1)
     ruby2_keywords (0.0.5)
 
@@ -43,6 +44,7 @@ DEPENDENCIES
   bundler
   gyazo!
   minitest
+  mutex_m
   rake
 
 BUNDLED WITH

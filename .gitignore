@@ -4,3 +4,4 @@
 pkg
 tmp
 .ruby-version
+bin/
